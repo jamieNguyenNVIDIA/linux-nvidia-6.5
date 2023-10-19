@@ -62,6 +62,7 @@
 
 #define pr_fmt(fmt) "CPU features: " fmt
 
+#include <linux/arm_smccc_em.h>
 #include <linux/bsearch.h>
 #include <linux/cpumask.h>
 #include <linux/crash_dump.h>
@@ -1059,6 +1060,12 @@ void __init init_cpu_features(struct cpuinfo_arm64 *info)
 
 	if (id_aa64pfr1_mte(info->reg_id_aa64pfr1))
 		init_cpu_ftr_reg(SYS_GMID_EL1, info->reg_gmid);
+
+	/*
+	 * Early erratum workaround may need to be discovered from firmware.
+	 */
+	if (IS_ENABLED(CONFIG_ARM_SMCCC_EM))
+		arm_smccc_em_init();
 
 	/*
 	 * Initialize the indirect array of CPU capabilities pointers before we

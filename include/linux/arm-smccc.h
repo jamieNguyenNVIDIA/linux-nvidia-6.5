@@ -182,6 +182,25 @@
 			   ARM_SMCCC_OWNER_STANDARD,		\
 			   0x53)
 
+/* Errata Management calls (defined by ARM DEN0100) */
+#define ARM_SMCCC_EM_VERSION					\
+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
+			   ARM_SMCCC_SMC_32,			\
+			   ARM_SMCCC_OWNER_STANDARD,		\
+			   0xF0)
+
+#define ARM_SMCCC_EM_FEATURES					\
+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
+			   ARM_SMCCC_SMC_32,			\
+			   ARM_SMCCC_OWNER_STANDARD,		\
+			   0xF1)
+
+#define ARM_SMCCC_EM_CPU_ERRATUM_FEATURES			\
+	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
+			   ARM_SMCCC_SMC_32,			\
+			   ARM_SMCCC_OWNER_STANDARD,		\
+			   0xF2)
+
 /*
  * Return codes defined in ARM DEN 0070A
  * ARM DEN 0070A is now merged/consolidated into ARM DEN 0028 C
@@ -190,6 +209,15 @@
 #define SMCCC_RET_NOT_SUPPORTED			-1
 #define SMCCC_RET_NOT_REQUIRED			-2
 #define SMCCC_RET_INVALID_PARAMETER		-3
+
+/*
+ * Return codes defined in ARM DEN 0100
+ */
+#define	SMCCC_EM_RET_HIGHER_EL_MITIGATION	3
+#define	SMCCC_EM_RET_NOT_AFFECTED		2
+#define	SMCCC_EM_RET_AFFECTED			1
+#define	SMCCC_EM_RET_INVALID_PARAMTER		-2
+#define	SMCCC_EM_RET_UNKNOWN			-3
 
 #ifndef __ASSEMBLY__
 
