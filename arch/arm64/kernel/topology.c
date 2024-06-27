@@ -194,10 +194,15 @@ static void amu_fie_setup(const struct cpumask *cpus)
 	int cpu;
 
 	/* We are already set since the last insmod of cpufreq driver */
-	if (unlikely(cpumask_subset(cpus, amu_fie_cpus)))
+	if (cpumask_available(amu_fie_cpus) &&
+	    unlikely(cpumask_subset(cpus, amu_fie_cpus)))
 		return;
 
 	for_each_cpu(cpu, cpus) {
+		if (!cpumask_available(amu_fie_cpus) &&
+		    !zalloc_cpumask_var(&amu_fie_cpus, GFP_KERNEL))
+			return;
+
 		if (!freq_counters_valid(cpu))
 			return;
 	}
@@ -237,17 +242,8 @@ static struct notifier_block init_amu_fie_notifier = {
 
 static int __init init_amu_fie(void)
 {
-	int ret;
-
-	if (!zalloc_cpumask_var(&amu_fie_cpus, GFP_KERNEL))
-		return -ENOMEM;
-
-	ret = cpufreq_register_notifier(&init_amu_fie_notifier,
-					CPUFREQ_POLICY_NOTIFIER);
-	if (ret)
-		free_cpumask_var(amu_fie_cpus);
-
-	return ret;
+	return cpufreq_register_notifier(&init_amu_fie_notifier,
+					 CPUFREQ_POLICY_NOTIFIER);
 }
 core_initcall(init_amu_fie);
 
